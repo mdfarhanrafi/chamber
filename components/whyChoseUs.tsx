@@ -3,7 +3,7 @@
 import type React from "react"
 import type { WhyChooseCardProps } from "@/types/dataTypes"
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import { motion,easeOut } from "framer-motion"
 import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import whyChooseItems from "@/lib/mockData/data"
@@ -28,7 +28,7 @@ const WhyChooseCard: React.FC<WhyChooseCardProps> = ({ title, description, icon:
         boxShadow: "0 0 0 2px rgba(0,237,197,0.2), 0 0 0 4px rgba(0,237,197,0.1)", // Soft outline glow
         transition: { duration: 0.2 },
       }}
-      transition={{ duration: 0.6, ease: "easeOut" }} // Transition for initial entry
+      transition={{ duration: 0.6, ease: easeOut }} // Transition for initial entry
     >
       <div className="flex justify-between items-start">
      

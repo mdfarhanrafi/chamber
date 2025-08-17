@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence,easeOut,easeInOut } from 'framer-motion'
 import { Star } from 'lucide-react' // For the star icon in the badge
 
 // Placeholder images for avatars and logos
@@ -59,7 +59,7 @@ export default function TestimonialSlider() {
       y: 0,
       transition: {
         duration: 0.5,
-        ease: "easeOut",
+        ease: easeOut,
       },
     },
   };
@@ -81,7 +81,7 @@ export default function TestimonialSlider() {
       transition: {
         duration: 3,
         repeat: Infinity,
-        ease: "easeInOut",
+        ease: easeInOut,
       },
     },
   };
