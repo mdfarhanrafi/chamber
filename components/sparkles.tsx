@@ -95,7 +95,19 @@ export function Sparkles({
       },
       move: {
         enable: true,
-        direction,
+        direction: direction as
+          | "bottom"
+          | "bottomLeft"
+          | "bottomRight"
+          | "left"
+          | "none"
+          | "right"
+          | "top"
+          | "topLeft"
+          | "topRight"
+          | "outside"
+          | "inside"
+          | undefined,
         speed: {
           min: minSpeed || speed / 130,
           max: speed,
@@ -103,10 +115,10 @@ export function Sparkles({
         straight: true,
       },
       collisions: {
-        absorb: {
+        "absorb": {
           speed: 2,
         },
-        bounce: {
+        "bounce": {
           horizontal: {
             value: 1,
           },
@@ -116,7 +128,7 @@ export function Sparkles({
         },
         enable: false,
         maxSpeed: 50,
-        mode: 'bounce',
+        mode: "bounce" as const,
         overlap: {
           enable: true,
           retries: 0,
@@ -149,7 +161,8 @@ export function Sparkles({
     isReady && (
       <Particles id={id} 
       // @ts-nocheck
-      options={defaultOptions} className={className} />
+      options={{ ...defaultOptions, ...options }}
+      className={className} />
     )
   );
 }

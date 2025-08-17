@@ -11,7 +11,7 @@ export const InfiniteMovingCards = ({
   className,
 }: {
   items: {
-    id:number,
+    id: number;
     name: string;
     img: string;
   }[];
@@ -26,7 +26,9 @@ export const InfiniteMovingCards = ({
   useEffect(() => {
     addAnimation();
   }, []);
+
   const [start, setStart] = useState(false);
+
   function addAnimation() {
     if (containerRef.current && scrollerRef.current) {
       const scrollerContent = Array.from(scrollerRef.current.children);
@@ -43,21 +45,16 @@ export const InfiniteMovingCards = ({
       setStart(true);
     }
   }
+
   const getDirection = () => {
     if (containerRef.current) {
-      if (direction === "left") {
-        containerRef.current.style.setProperty(
-          "--animation-direction",
-          "forwards",
-        );
-      } else {
-        containerRef.current.style.setProperty(
-          "--animation-direction",
-          "reverse",
-        );
-      }
+      containerRef.current.style.setProperty(
+        "--animation-direction",
+        direction === "left" ? "forwards" : "reverse"
+      );
     }
   };
+
   const getSpeed = () => {
     if (containerRef.current) {
       if (speed === "fast") {
@@ -69,41 +66,45 @@ export const InfiniteMovingCards = ({
       }
     }
   };
+
   return (
     <div
       ref={containerRef}
       className={cn(
-        "scroller relative z-20 max-w-7xl overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]",
-        className,
+        "scroller relative z-20 max-w-7xl overflow-hidden px-2 sm:px-4 [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]",
+        className
       )}
     >
       <ul
         ref={scrollerRef}
         className={cn(
-          "flex w-max min-w-full shrink-0 flex-nowrap gap-4 py-4",
+          "flex w-max min-w-full shrink-0 flex-nowrap gap-3 sm:gap-4 py-3 sm:py-4",
           start && "animate-scroll",
-          pauseOnHover && "hover:[animation-play-state:paused]",
+          pauseOnHover && "hover:[animation-play-state:paused]"
         )}
       >
-        {items.map((item, idx) => (
+        {items.map((item) => (
           <li
-            className="relative w-50 border-zinc-200 bg-black px-8 py-6 md:w-[450px] dark:border-zinc-700 dark:bg-[linear-gradient(180deg,#27272a,#18181b)]"
             key={item.id}
+            className="relative w-[250px] sm:w-[320px] md:w-[400px] lg:w-[450px] bg-black px-4 py-4 sm:px-6 sm:py-5 rounded-xl dark:bg-[linear-gradient(180deg,#27272a,#18181b)]"
           >
-              <div
-                aria-hidden="true"
-                className="user-select-none pointer-events-none absolute -top-0.5 -left-0.5 -z-1 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]"
-              ></div>
-              <div className="relative z-20 mt-6 flex flex-row items-center">
-                <span className="flex justify-between gap-1">
-                <img className='rounded-full' width='50' height='50' alt='' src={item.img} />
-                  <span className="text-lg leading-[1.6] font-semibold text-white">
-                    {item.name}
-                  </span>
-                 
-                </span>
-              </div>
-            
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -top-0.5 -left-0.5 -z-10 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]"
+            ></div>
+
+            <div className="relative z-20 flex flex-row items-center gap-3">
+              <img
+                className="rounded-full object-cover"
+                width="50"
+                height="50"
+                alt={item.name}
+                src={item.img}
+              />
+              <span className="text-base sm:text-lg font-semibold text-white truncate">
+                {item.name}
+              </span>
+            </div>
           </li>
         ))}
       </ul>

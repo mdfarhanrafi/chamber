@@ -46,7 +46,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ title, description, isHighlig
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.3 }}
-      variants={cardEntryVariants}
       transition={{ delay: index * 0.1 }} // 100ms stagger
       whileHover={{ y: -8 }} // Lift 8px
       onHoverStart={() => setIsHovered(true)}
