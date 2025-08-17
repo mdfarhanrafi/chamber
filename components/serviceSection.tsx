@@ -1,74 +1,84 @@
 "use client"
 
 import { useState } from "react"
-import type {ServiceCardProps} from "@/types/dataTypes"
+import type { ServiceCardProps } from "@/types/dataTypes"
 import Image from "next/image"
 import Link from "next/link"
-import { motion } from "framer-motion"
+import { motion,easeOut } from "framer-motion"
 import { Star, ArrowRight, ArrowUpRight } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { serviceItems,benefits,stats } from "@/lib/mockData/data"
+import { serviceItems, benefits, stats } from "@/lib/mockData/data"
 // Placeholder image for the main section
 const MAIN_SECTION_IMAGE = "/services.png"
 
-
-
-
-// Variants for card entry animation
+// Variants for card entry animation (function for stagger)
 const cardEntryVariants = {
   hidden: { opacity: 0, y: 50 },
-  visible: {
+  visible: (i: number = 0) => ({
     opacity: 1,
     y: 0,
     transition: {
       duration: 0.5,
-      ease: "easeOut",
+      delay: i * 0.1,
+      ease: easeOut,
     },
-  },
+  }),
 }
 
 // ServiceCard Component
-
-
-const ServiceCard: React.FC<ServiceCardProps> = ({ title, description, isHighlighted = false, index }) => {
+const ServiceCard: React.FC<ServiceCardProps & { index: number }> = ({
+  title,
+  description,
+  isHighlighted = false,
+  index,
+}) => {
   const [isHovered, setIsHovered] = useState(false)
 
   return (
     <motion.div
       className={cn(
         "relative p-12 rounded-xl shadow-sm border flex flex-col justify-between h-full cursor-pointer",
-        "transition-all duration-180 ease-out", // Base transition for lift and shadow
+        "transition-all duration-180 ease-out",
         isHighlighted
           ? "bg-[#2CCEBA] text-white border-custom-teal-500"
           : "bg-gray-50 text-gray-900 border-gray-100",
-        isHovered && "shadow-[0_0_0_2px_rgba(0,237,197,0.2),0_0_0_4px_rgba(0,237,197,0.1)]", // Shadow glow on hover
+        isHovered &&
+          "shadow-[0_0_0_2px_rgba(0,237,197,0.2),0_0_0_4px_rgba(0,237,197,0.1)]"
       )}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.3 }}
-      transition={{ delay: index * 0.1 }} // 100ms stagger
-      whileHover={{ y: -8 }} // Lift 8px
+      variants={cardEntryVariants}
+      custom={index}
+      whileHover={{ y: -8 }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      will-change="transform, box-shadow"
+      style={{ willChange: "transform, box-shadow" }}
     >
       <h3 className="text-2xl font-semibold mb-2">{title}</h3>
-      <p className={cn("text-sm", isHighlighted ? "text-white/80" : "text-gray-600")}>{description}</p>
+      <p
+        className={cn(
+          "text-sm",
+          isHighlighted ? "text-white/80" : "text-gray-600"
+        )}
+      >
+        {description}
+      </p>
       <div className="mt-6 flex justify-end">
         <motion.div
           className={cn(
             "w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-180",
             isHighlighted ? "bg-white text-[#2CCEBA]" : "bg-gray-200 text-gray-900",
-            isHovered && "bg-[#2CCEBA] text-white", // Icon background changes to teal on hover
+            isHovered && "bg-[#2CCEBA] text-white"
           )}
-          animate={{ y: isHovered ? -6 : 0 }} // Icon nudges up 6px
+          animate={{ y: isHovered ? -6 : 0 }}
           transition={{ duration: 0.18, ease: "easeOut" }}
-          will-change="transform"
+          style={{ willChange: "transform" }}
         >
           <motion.div
-            animate={{ x: isHovered ? 6 : 0 }} // Arrow slides 6px to the right
+            animate={{ x: isHovered ? 6 : 0 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
-            will-change="transform"
+            style={{ willChange: "transform" }}
           >
             <ArrowUpRight className="w-6 h-6" />
           </motion.div>
@@ -117,43 +127,52 @@ export default function ServicesSection() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-center">
-          {/* Left Column: Stats */}
-          <div className="flex flex-col gap-6 md:gap-8 lg:gap-10">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-left">
-                <p className="text-4xl md:text-5xl font-bold text-gray-900 leading-none">{stat.value}</p>
-                <p className="text-lg text-muted-foreground">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Middle Column: Image */}
-          <div className="flex justify-center items-center">
-            <Image
-              src={"/service.png"}
-              alt="People collaborating in an office"
-              width={500}
-              height={400}
-              className="rounded-xl object-cover w-full h-auto max-h-[400px] md:max-h-[500px] lg:max-h-[400px]"
-              priority
-            />
-          </div>
-
-          {/* Right Column: Benefits */}
-          <div className="space-y-6 md:space-y-8">
-            {benefits.map((benefit) => (
-              <div key={benefit.number} className="flex items-start gap-3 text-left">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#2CCEBA] text-white text-sm font-bold shrink-0">
-                  {benefit.number}
+            {/* Left Column: Stats */}
+            <div className="flex flex-col gap-6 md:gap-8 lg:gap-10">
+              {stats.map((stat, index) => (
+                <div key={index} className="text-left">
+                  <p className="text-4xl md:text-5xl font-bold text-gray-900 leading-none">
+                    {stat.value}
+                  </p>
+                  <p className="text-lg text-muted-foreground">{stat.label}</p>
                 </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">{benefit.title}</h4>
-                  <p className="text-muted-foreground text-sm">{benefit.description}</p>
+              ))}
+            </div>
+
+            {/* Middle Column: Image */}
+            <div className="flex justify-center items-center">
+              <Image
+                src={MAIN_SECTION_IMAGE}
+                alt="People collaborating in an office"
+                width={500}
+                height={400}
+                className="rounded-xl object-cover w-full h-auto max-h-[400px] md:max-h-[500px] lg:max-h-[400px]"
+                priority
+              />
+            </div>
+
+            {/* Right Column: Benefits */}
+            <div className="space-y-6 md:space-y-8">
+              {benefits.map((benefit) => (
+                <div
+                  key={benefit.number}
+                  className="flex items-start gap-3 text-left"
+                >
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#2CCEBA] text-white text-sm font-bold shrink-0">
+                    {benefit.number}
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">
+                      {benefit.title}
+                    </h4>
+                    <p className="text-muted-foreground text-sm">
+                      {benefit.description}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
         </div>
       </section>
 
